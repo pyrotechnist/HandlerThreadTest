@@ -9,6 +9,10 @@ import android.widget.LinearLayout;
 
 import java.util.Random;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+
 public class MainActivity extends Activity   implements MyWorkerThread.Callback {
 
     private static boolean isVisible;
@@ -31,6 +35,8 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
                 "https://developer.android.com/design/media/principles_real_objects.png",
                 "https://developer.android.com/design/media/principles_make_it_mine.png",
                 "https://developer.android.com/design/media/principles_get_to_know_me.png"};
+
+        // solution 1  ： HandlerThread
         mWorkerThread = new MyWorkerThread(new Handler(), this);
         mWorkerThread.start();
         mWorkerThread.prepareHandler();
@@ -38,6 +44,15 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
         for (String url : urls){
             mWorkerThread.queueTask(url, random.nextInt(2), new ImageView(this));
         }
+
+        //Solution 2 : rx + retrofit
+/*
+        DownLoadImageAPI downloadService = createService(DownLoadImageAPI.class, "https://github.com/");
+        downloadService.downloadFileByUrlRx("yourusername/awesomegames/archive/master.zip")
+                .flatMap(processResponse())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(handleResult());*/
 
 
     }
@@ -66,5 +81,13 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
         }
 
 
+    }
+
+    public <T> T createService(Class<T> serviceClass, String baseUrl) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(new OkHttpClient.Builder().build())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
+        return retrofit.create(serviceClass);
     }
 }
