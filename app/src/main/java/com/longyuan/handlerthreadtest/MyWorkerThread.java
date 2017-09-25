@@ -61,7 +61,9 @@ public class MyWorkerThread extends HandlerThread {
                 String side = msg.what == MainActivity.LEFT_SIDE ? "left side" : "right side";
                 Log.i(TAG, String.format("Processing %s, %s", mRequestMap.get(imageView), side));
                 handleRequest(imageView, msg.what);
-                msg.recycle();
+
+                // for API < 21 ??????
+                //msg.recycle();
                 return true;
             }
         });
@@ -72,8 +74,9 @@ public class MyWorkerThread extends HandlerThread {
         try {
             HttpURLConnection connection =
                     (HttpURLConnection) new URL(url).openConnection();
+            int responseCode = connection.getResponseCode();
             final Bitmap bitmap = BitmapFactory
-                    .decodeStream((InputStream) connection.getContent());
+                    .decodeStream((InputStream) connection.getInputStream());  //or connection.getContent()???????????????
             mRequestMap.remove(imageView);
             mResponseHandler.post(new Runnable() {
                 @Override

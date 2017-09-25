@@ -27,10 +27,10 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
         isVisible = true;
         mLeftSideLayout = (LinearLayout) findViewById(R.id.leftSideLayout);
         mRightSideLayout = (LinearLayout) findViewById(R.id.rightSideLayout);
-        String[] urls = new String[]{"http://developer.android.com/design/media/principles_delight.png",
-                "http://developer.android.com/design/media/principles_real_objects.png",
-                "http://developer.android.com/design/media/principles_make_it_mine.png",
-                "http://developer.android.com/design/media/principles_get_to_know_me.png"};
+        String[] urls = new String[]{"https://developer.android.com/design/media/principles_delight.png",
+                "https://developer.android.com/design/media/principles_real_objects.png",
+                "https://developer.android.com/design/media/principles_make_it_mine.png",
+                "https://developer.android.com/design/media/principles_get_to_know_me.png"};
         mWorkerThread = new MyWorkerThread(new Handler(), this);
         mWorkerThread.start();
         mWorkerThread.prepareHandler();
@@ -58,6 +58,12 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
 
     @Override
     public void onImageDownloaded(ImageView imageView, Bitmap bitmap, int side) {
+        imageView.setImageBitmap(bitmap);
+        if (isVisible && side == LEFT_SIDE){
+            mLeftSideLayout.addView(imageView);
+        } else if (isVisible && side == RIGHT_SIDE){
+            mRightSideLayout.addView(imageView);
+        }
 
 
     }
