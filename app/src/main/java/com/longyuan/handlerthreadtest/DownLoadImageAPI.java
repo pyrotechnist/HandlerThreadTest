@@ -2,11 +2,12 @@ package com.longyuan.handlerthreadtest;
 
 import com.squareup.okhttp.ResponseBody;
 
-import io.reactivex.Observable;
+
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
+import rx.Observable;
 
 /**
  * Created by LONGYUAN on 2017/9/25.
