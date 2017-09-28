@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +17,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -86,7 +86,7 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
         }).flatMap(processResponse())
                 .subscribeOn(Schedulers.io())
                 //.interval(1, TimeUnit.SECONDS)
-                //.delay(2, TimeUnit.SECONDS, Schedulers.trampoline())
+                .delay(2, TimeUnit.SECONDS, Schedulers.trampoline())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(handleResult());
 
@@ -130,14 +130,11 @@ public class MainActivity extends Activity   implements MyWorkerThread.Callback 
         return new Func1<Response<ResponseBody>, Observable<Bitmap>>() {
             @Override
             public Observable<Bitmap> call(Response<ResponseBody> responseBodyResponse) {
-                try {
+
                     Bitmap bitmap = BitmapFactory
                             .decodeStream((InputStream) responseBodyResponse.body().byteStream());
                     return Observable.just(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
+
             }
         };
     }

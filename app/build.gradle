@@ -34,7 +34,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
 
 
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
     testCompile 'junit:junit:4.12'
 }
